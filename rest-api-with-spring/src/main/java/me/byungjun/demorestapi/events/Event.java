@@ -1,6 +1,11 @@
 package me.byungjun.demorestapi.events;
 
 import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -10,8 +15,10 @@ import lombok.Setter;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter @EqualsAndHashCode(of = "id")
+@Entity
 public class Event {
 
+  @Id @GeneratedValue
   private Integer id;
   private String name;
   private String description;
@@ -25,6 +32,7 @@ public class Event {
   private int limitOfEnrollment;
   private boolean offling;
   private boolean free;
+  @Enumerated(EnumType.STRING)
   private EventStatus eventStatus;
 
 }
