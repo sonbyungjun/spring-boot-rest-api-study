@@ -38,6 +38,7 @@ public class EventControllerTests {
         .description("REST Development with Spring")
         .beginEnrollmentDateTime(LocalDateTime.of(2019, 07, 19, 10, 10))
         .closeEnrollmentDateTime(LocalDateTime.of(2019, 07, 20, 10, 10))
+        .beginEventDateTime(LocalDateTime.of(2019, 07, 20, 10, 00))
         .endEventDateTime(LocalDateTime.of(2019, 07, 25, 10, 00))
         .basePrice(100)
         .maxPrice(200)
@@ -67,6 +68,7 @@ public class EventControllerTests {
         .description("REST Development with Spring")
         .beginEnrollmentDateTime(LocalDateTime.of(2019, 07, 19, 10, 10))
         .closeEnrollmentDateTime(LocalDateTime.of(2019, 07, 20, 10, 10))
+        .beginEventDateTime(LocalDateTime.of(2019, 07, 20, 10, 00))
         .endEventDateTime(LocalDateTime.of(2019, 07, 25, 10, 00))
         .basePrice(100)
         .maxPrice(200)
@@ -83,6 +85,16 @@ public class EventControllerTests {
         .content(objectMapper.writeValueAsString(event)))
         .andDo(print())
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void createEvent_Bad_Request_Empty_Input() throws Exception {
+    EventDto eventDto = EventDto.builder().build();
+
+    this.mockMvc.perform(post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.objectMapper.writeValueAsString(eventDto)))
+          .andExpect(status().isBadRequest());
   }
 
 }
