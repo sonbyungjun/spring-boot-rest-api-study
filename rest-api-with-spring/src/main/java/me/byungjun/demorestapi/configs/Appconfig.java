@@ -2,8 +2,10 @@ package me.byungjun.demorestapi.configs;
 
 import java.util.Set;
 import me.byungjun.demorestapi.accounts.Account;
+import me.byungjun.demorestapi.accounts.AccountRepository;
 import me.byungjun.demorestapi.accounts.AccountRole;
 import me.byungjun.demorestapi.accounts.AccountService;
+import me.byungjun.demorestapi.common.AppProperties;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -33,14 +35,24 @@ public class Appconfig {
       @Autowired
       AccountService accountService;
 
+      @Autowired
+      AppProperties appProperties;
+
       @Override
       public void run(ApplicationArguments args) throws Exception {
-        Account byungjun = Account.builder()
-            .email("saint2030@naver.com")
-            .password("byungjun")
+        Account admin = Account.builder()
+            .email(appProperties.getAdminUsername())
+            .password(appProperties.getAdminPassword())
             .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
             .build();
-        accountService.saveAccount(byungjun);
+        accountService.saveAccount(admin);
+
+        Account user = Account.builder()
+            .email(appProperties.getUserUsername())
+            .password(appProperties.getUserPassword())
+            .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
+            .build();
+        accountService.saveAccount(user);
       }
     };
   }

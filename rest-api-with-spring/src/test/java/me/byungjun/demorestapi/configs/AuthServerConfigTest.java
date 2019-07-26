@@ -10,6 +10,7 @@ import java.util.Set;
 import me.byungjun.demorestapi.accounts.Account;
 import me.byungjun.demorestapi.accounts.AccountRole;
 import me.byungjun.demorestapi.accounts.AccountService;
+import me.byungjun.demorestapi.common.AppProperties;
 import me.byungjun.demorestapi.common.BaseControllerTest;
 import me.byungjun.demorestapi.common.TestDescription;
 import org.junit.Test;
@@ -20,30 +21,20 @@ public class AuthServerConfigTest extends BaseControllerTest {
   @Autowired
   AccountService accountService;
 
+  @Autowired
+  AppProperties appProperties;
+
   @Test
   @TestDescription("인증 토큰을 발급 받는 테스트")
   public void getAuthToken() throws Exception {
-    // Given
-    String username = "saint@naver.com";
-    String password = "byungjun";
-    Account byungjun = Account.builder()
-        .email(username)
-        .password(password)
-        .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
-        .build();
-    accountService.saveAccount(byungjun);
-
-    String clientID = "myApp";
-    String clientSecret = "pass";
-
-      this.mockMvc.perform(post("/oauth/token")
-          .with(httpBasic(clientID, clientSecret))
-          .param("username", username)
-          .param("password", password)
-          .param("grant_type", "password"))
-          .andDo(print())
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("access_token").exists());
+    this.mockMvc.perform(post("/oauth/token")
+        .with(httpBasic(appProperties.getClientId(), appProperties.getClientSercet()))
+        .param("username", appProperties.getUserUsername())
+        .param("password", appProperties.getUserPassword())
+        .param("grant_type", "password"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("access_token").exists());
   }
 
 }
