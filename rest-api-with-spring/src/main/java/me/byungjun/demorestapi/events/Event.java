@@ -1,5 +1,6 @@
 package me.byungjun.demorestapi.events;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.byungjun.demorestapi.accounts.Account;
+import me.byungjun.demorestapi.accounts.AccountSerializer;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter @EqualsAndHashCode(of = "id")
@@ -34,9 +36,12 @@ public class Event {
   private int limitOfEnrollment;
   private boolean offline;
   private boolean free;
+
   @Enumerated(EnumType.STRING)
   private EventStatus eventStatus = EventStatus.DRAFT;
+
   @ManyToOne
+  @JsonSerialize(using = AccountSerializer.class)
   private Account manager;
 
   public void update() {
